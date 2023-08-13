@@ -223,7 +223,7 @@
  * @swagger
  * /articles:
  *   post:
- *     summary: Post new article data
+ *     summary: Post new article data - admin exclusive
  *     tags: [Article]
  *     security:
  *       - bearerAuth: []
@@ -307,7 +307,7 @@
  * @swagger
  * /articles/{id_article}:
  *   patch:
- *     summary: Edit article data
+ *     summary: Edit article data - admin exclusive
  *     tags: [Article]
  *     security:
  *       - bearerAuth: []
@@ -411,7 +411,7 @@
  * @swagger
  * /articles/{id_article}:
  *   delete:
- *     summary: Delete article data
+ *     summary: Delete article data - admin exclusive
  *     tags: [Article]
  *     security:
  *       - bearerAuth: []

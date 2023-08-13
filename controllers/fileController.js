@@ -20,8 +20,7 @@ exports.uploadFile = async (req, res, next) => {
         // * ketika gambar -> game -> tentukan game mana dan pada id yang mana juga (ada tambahan lebih panjang daripada up video)
         if(folderName === 'games'){
             const game_type = req.game // * sekarang (pilgan/jawaban)
-            const question_id = req.id_question
-            filepath = "games/" + game_type + '/' + question_id + '/'
+            filepath = "games/" + game_type + '/'
 
             filename = filename + '.png'
         } else if (folderName === 'article') {
@@ -37,15 +36,6 @@ exports.uploadFile = async (req, res, next) => {
 
 
         let uploadPath = filepath + filename
-
-        //* ketika ada gambar maka delete dahulu
-        // if(req.edit_file){
-        //     const del_file = req.file_delete.split('/')
-        //     const name_pic = del_file[del_file.length - 1]
-        //     let delete_path = path_name + name_pic
-        //
-        //     await bucket.file(delete_path).delete()
-        // }
 
         // *? Create a new blob in the bucket and upload the file data.
         const blob = bucket.file(uploadPath);
@@ -92,6 +82,9 @@ exports.deleteItem = async (req, res, next) => {
 
         if(req.type === 'games'){
             folderName = 'games/'
+            const game_type = req.game
+
+            uploadPath = folderName + game_type + '/' + filename
         } else if(req.type === 'article') {
             folderName = 'articles/'
 

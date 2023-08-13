@@ -1,7 +1,7 @@
 const GameTebakan = require('../models/game-tebakan')
 const statusCode = require('../utils/http-response').httpStatus_keyValue
 const _ = require('lodash')
-
+const fileController = require('../controllers/fileController')
 
 // * -------------------------------- routing
 
@@ -165,14 +165,24 @@ exports.post_question = async (req, res, next) => {
     try{
         // * pertama ini pake versi non gambar dahulu -> diubah nanti jadi ke multipart-form
         const question = req.body.question
-        const question_pic = null
         const answer = req.body.answer//.toLowerCase()
+        let question_pic = null
 
         const new_question = new GameTebakan({
             question: question,
             question_pic: question_pic,
             answer: answer
         })
+
+        // * proses file disini karena harus buat objek pertanyaan terkait di atas untuk bisa dapatkan id-nya
+        // * jika gunakan gambar
+        if(req.file){
+            req.type = 'games'
+            req.game = 'jawaban'
+
+            question_pic = await fileController.uploadFile(req)
+            new_question.question_pic = question_pic
+        }
 
         await new_question.save()
 
@@ -200,13 +210,42 @@ exports.edit_question = async (req, res, next) => {
             throw_err("Data tidak ditemukan, edit gagal", statusCode['404_not_found'])
         }
 
-        // * catatan -> belum gunakan multipart - form data jadi tidak ada proses gambar
+        req.type = 'games'
+        req.game = 'jawaban'
+        req.file_url = question_edit.question_pic
+
+        // * query ketika ingin hapus data gambar jadi null
+        if(req.query.del_pic === 'true' && question_edit.question_pic){
+            const del_pic = await fileController.deleteItem(req)
+
+            if(!del_pic){
+                return throw_err("Proses edit pertanyaan gagal", statusCode['400_bad_request'])
+            }
+
+            question_edit.question_pic = null
+        }
+        // * -------------- -------------- -------------- --------------
+
+
         const new_question = req.body.question
-        const new_answer = req.body.answer.toString()//.toLowerCase()
+        const new_answer = req.body.answer.toString()
 
         question_edit.question = new_question
-        question_edit.question_pic = null
         question_edit.answer = new_answer
+
+        if(req.file && req.query.del_pic !== 'true'){
+            if(question_edit.question_pic){
+                const del_pic = await fileController.deleteItem(req)
+
+                if(!del_pic){
+                    return throw_err("Proses edit pertanyaan gagal", statusCode['400_bad_request'])
+                }
+            }
+
+            let pic = await fileController.uploadFile(req)
+
+            question_edit.question_pic = pic
+        }
 
         await question_edit.save()
 
@@ -232,6 +271,14 @@ exports.delete_question = async (req, res, next) => {
         const delete_question = await GameTebakan.findById(req.params.id_question)
         if(!delete_question){
             throw_err('Data tidak ditemukan, delete gagal', statusCode['404_not_found'])
+        }
+
+        if(delete_question.question_pic){
+            req.type = 'games'
+            req.game = 'jawaban'
+            req.file_url = delete_question.question_pic
+
+            await fileController.deleteItem(req)
         }
 
         await GameTebakan.findByIdAndDelete(req.params.id_question)

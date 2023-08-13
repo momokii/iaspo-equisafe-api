@@ -344,7 +344,7 @@
  *     requestBody:
  *       required: true
  *       content:
- *         application/json:
+ *         multipart/form-data:
  *           schema:
  *             type: object
  *             properties:
@@ -352,6 +352,8 @@
  *                 type: string
  *               answer:
  *                 type: string
+ *               file:
+ *                 type: file
  *     security:
  *       - bearerAuth: []
  *
@@ -411,10 +413,14 @@
  *         in: path
  *         required: true
  *         description: id question need to edit
+ *       - name: del_pic
+ *         in: query
+ *         description: set to "true" if need to delete image from the question
+ *
  *     requestBody:
  *       required: true
  *       content:
- *         application/json:
+ *         multipart/form-data:
  *           schema:
  *             type: object
  *             properties:
@@ -422,6 +428,8 @@
  *                 type: string
  *               answer:
  *                 type: string
+ *               file:
+ *                 type: file
  *     security:
  *       - bearerAuth: []
  *
