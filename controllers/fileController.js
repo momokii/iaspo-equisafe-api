@@ -18,10 +18,14 @@ exports.uploadFile = async (req, res, next) => {
         let filename = crypto.randomBytes(4).toString('hex')
 
         // * ketika gambar -> game -> tentukan game mana dan pada id yang mana juga (ada tambahan lebih panjang daripada up video)
-        if(folderName === 'img'){
+        if(folderName === 'games'){
             const game_type = req.game // * sekarang (pilgan/jawaban)
             const question_id = req.id_question
-            filepath = "gambar/" + game_type + '/' + question_id + '/'
+            filepath = "games/" + game_type + '/' + question_id + '/'
+
+            filename = filename + '.png'
+        } else if (folderName === 'article') {
+            filepath = "articles/"
 
             filename = filename + '.png'
         } else {
@@ -86,8 +90,12 @@ exports.deleteItem = async (req, res, next) => {
         let del_file =  req.file_url.split('/')
         const filename = del_file[del_file.length - 1]
 
-        if(req.type === 'img'){
+        if(req.type === 'games'){
             folderName = 'games/'
+        } else if(req.type === 'article') {
+            folderName = 'articles/'
+
+            uploadPath = folderName + filename
         } else {
             folderName = 'videos/'
 

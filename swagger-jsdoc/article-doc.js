@@ -213,3 +213,273 @@
  *
  *
  */
+
+
+
+
+
+//*! /articles
+/**
+ * @swagger
+ * /articles:
+ *   post:
+ *     summary: Post new article data
+ *     tags: [Article]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               title:
+ *                 type: string
+ *               author:
+ *                 type: string
+ *               source:
+ *                 type: string
+ *               content:
+ *                 type: string
+ *               file:
+ *                 type: file
+ *
+ *
+ *     responses:
+ *       '200':
+ *         description: Post new article data
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 errors:
+ *                   example: false
+ *                 message:
+ *                   example: Sukses tambah artikel baru
+ *
+ *       '400':
+ *         description: Process Post new article error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 errors:
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *
+ *       '401':
+ *         description: Token not valid / Account doesnt have access
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 errors:
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *
+ *       '500':
+ *         description: Internal Server Error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 errors:
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *
+ *
+ */
+
+
+
+
+
+//*! /articles/id_article
+/**
+ * @swagger
+ * /articles/{id_article}:
+ *   patch:
+ *     summary: Edit article data
+ *     tags: [Article]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - name: id_article
+ *         in: path
+ *         description: id_article need to edit
+ *       - name: del_pic
+ *         in: query
+ *         description: set to "true" if need to delete image from the article and set to default image
+ *
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               title:
+ *                 type: string
+ *               author:
+ *                 type: string
+ *               source:
+ *                 type: string
+ *               content:
+ *                 type: string
+ *               file:
+ *                 type: file
+ *
+ *
+ *     responses:
+ *       '200':
+ *         description: Edit article data
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 errors:
+ *                   example: false
+ *                 message:
+ *                   example: Sukses edit artikel
+ *
+ *       '400':
+ *         description: Process Edit article error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 errors:
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *
+ *       '401':
+ *         description: Token not valid / Account doesnt have access
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 errors:
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *
+ *       '404':
+ *         description: Article data not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 errors:
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *
+ *       '500':
+ *         description: Internal Server Error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 errors:
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *
+ *
+ */
+
+
+
+
+
+//*! /articles/:id_article
+/**
+ * @swagger
+ * /articles/{id_article}:
+ *   delete:
+ *     summary: Delete article data
+ *     tags: [Article]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - name: id_article
+ *         in: path
+ *         description: id article need to delete
+ *
+ *     responses:
+ *       '200':
+ *         description: Delete article data
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 errors:
+ *                   example: false
+ *                 message:
+ *                   example: Sukses delete artikel
+ *
+ *       '400':
+ *         description: Process Delete article error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 errors:
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *
+ *       '401':
+ *         description: Token not valid / Account doesnt have access
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 errors:
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *
+ *       '404':
+ *         description: Article data not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 errors:
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *
+ *       '500':
+ *         description: Internal Server Error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 errors:
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *
+ *
+ */
