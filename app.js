@@ -16,7 +16,7 @@ const MONGO_DEV = MONGO + 'dev-iaspo'
 const MONGO_PROD = MONGO + 'prod-iaspo'
 
 // * routing
-const authController = require('./routes/authRoutes')
+const authRouting = require('./routes/authRoutes')
 const articleRouting = require('./routes/articleRoutes')
 const videoRouting = require('./routes/videoRoutes')
 const userRouting = require('./routes/userRoutes')
@@ -77,7 +77,7 @@ app.use( helmet({
 
 // * -- app config routing
 app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerSpecs))
-app.use('/', authController)
+app.use('/', authRouting)
 app.use('/users', userRouting)
 app.use('/articles', articleRouting)
 app.use('/videos', videoRouting)

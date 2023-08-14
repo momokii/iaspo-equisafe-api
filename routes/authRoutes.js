@@ -1,5 +1,5 @@
 const router = require('express').Router()
-const authController = require('../controllers/authConrtoller')
+const authController = require('../controllers/authController')
 const is_auth = require('../middleware/is-auth')
 const User = require('../models/user')
 const statusCode = require('../utils/http-response').httpStatus_keyValue
