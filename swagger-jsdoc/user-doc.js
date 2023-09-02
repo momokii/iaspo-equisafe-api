@@ -63,12 +63,95 @@
 
 
 
+//*! /users/self
+/**
+ * @swagger
+ * /users/self:
+ *   get:
+ *     summary: Get self user data
+ *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
+ *
+ *     responses:
+ *       '200':
+ *         description: Get User Data
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 errors:
+ *                   example: false
+ *                 message:
+ *                   example: Info User
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     _id:
+ *                       type: string
+ *                     username:
+ *                       type: string
+ *                     name:
+ *                       type: string
+ *                     role:
+ *                       type: string
+ *                     last_video:
+ *                       type: object
+ *                       properties:
+ *                         _id:
+ *                           type: string
+ *                         title:
+ *                           type: string
+ *                         description:
+ *                           type: string
+ *                         link:
+ *                           type: string
+ *                     emergency_contact:
+ *                       type: object
+ *                       properties:
+ *                         name:
+ *                           type: string
+ *                         no_telp:
+ *                           type: string
+ *
+ *       '404':
+ *         description: User data not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 errors:
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *
+ *       '500':
+ *         description: Internal Server Error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 errors:
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *
+ *
+ */
+
+
+
+
+
 //*! /users/:username
 /**
  * @swagger
  * /users/{username}:
  *   get:
- *     summary: Get one user data
+ *     summary: Get one user data - just admin can get all user data
  *     tags: [Users]
  *     parameters:
  *       - name: username

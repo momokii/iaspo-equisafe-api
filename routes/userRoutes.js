@@ -8,6 +8,8 @@ const { body }  = require('express-validator')
 
 router.get('/checks', is_auth, userController.check_username)
 
+router.get('/self', is_auth, userController.get_info_self)
+
 router.get('/:username', is_auth, userController.get_info)
 
 router.patch('/password', is_auth, [

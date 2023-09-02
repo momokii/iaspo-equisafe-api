@@ -55,6 +55,49 @@ exports.check_username = async (req, res, next) => {
 
 
 
+exports.get_info_self = async(req, res, next) => {
+    try {
+        const user = await User.findById(req.userId)
+            .select("username nam role last_video emergency_contact")
+            .populate({
+                path: "last_video",
+                select: "title description link"
+            })
+            .lean()
+
+        if(!user){
+            throw_err("Token Error, User tidak ditemukan", statusCode['404_not_found'])
+        }
+
+        if(user.last_video === null){
+            user.last_video = {
+                _id: null,
+                title: null,
+                description: null,
+                link: null
+            }
+        }
+
+        user.emergency_contact.no_telp = user.emergency_contact.no_telp.toString()
+
+        res.status(statusCode['200_ok']).json({
+            errors: false,
+            message : "Info user detail",
+            data: user
+        })
+
+    } catch (e) {
+        if(e.statusCode){
+            e.statusCode = statusCode['500_internal_server_error']
+        }
+        next(e)
+    }
+}
+
+
+
+
+
 exports.get_info = async (req, res, next) => {
     try{
         let user = await User.findOne({
