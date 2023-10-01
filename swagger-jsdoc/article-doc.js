@@ -257,7 +257,7 @@
  *                 errors:
  *                   example: false
  *                 message:
- *                   example: Sukses tambah artikel baru
+ *                   example: Sukses add new Article
  *
  *       '400':
  *         description: Process Post new article error
@@ -297,6 +297,77 @@
  *
  *
  */
+
+
+
+
+
+//*! /articles/id_article/delete-thumbnail
+/**
+ * @swagger
+ * /articles/{id_article}/delete-thumbnail:
+ *   patch:
+ *     summary: Edit article data delete thumbnail images - admin exclusive
+ *     tags: [Article]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - name: id_article
+ *         in: path
+ *         description: id_article need to edit
+ *
+ *     responses:
+ *       '200':
+ *         description: Edit article data
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 errors:
+ *                   example: false
+ *                 message:
+ *                   example: Success delete article thumbnail
+ *
+ *       '401':
+ *         description: Token not valid / Account doesnt have access
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 errors:
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *
+ *       '404':
+ *         description: Article data not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 errors:
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *
+ *       '500':
+ *         description: Internal Server Error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 errors:
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *
+ *
+ */
+
 
 
 
@@ -349,7 +420,7 @@
  *                 errors:
  *                   example: false
  *                 message:
- *                   example: Sukses edit artikel
+ *                   example: Succes edit article
  *
  *       '400':
  *         description: Process Edit article error
@@ -431,7 +502,7 @@
  *                 errors:
  *                   example: false
  *                 message:
- *                   example: Sukses delete artikel
+ *                   example: Success delete Article
  *
  *       '400':
  *         description: Process Delete article error

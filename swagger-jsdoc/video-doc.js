@@ -175,7 +175,7 @@
  *     tags: [Video]
  *     security:
  *       - bearerAuth: []
- *     requestBody:
+ *     requestBody: 
  *       required: true
  *       content:
  *         multipart/form-data:

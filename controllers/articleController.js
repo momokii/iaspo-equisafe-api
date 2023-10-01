@@ -1,3 +1,4 @@
+require('dotenv')
 const statusCode = require('../utils/http-response').httpStatus_keyValue
 const Article = require('../models/article')
 const fileController = require('../controllers/fileController')
@@ -89,10 +90,28 @@ exports.getOneArticle = async (req, res, next) => {
             article.pic = "https://storage.googleapis.com/prjct-ie-dev-01/templates/article-default.png"
         }
 
+        let random_article = await Article.aggregate([
+            { $match: { _id: { $ne: id_article } } },
+            { $sample: { size: 1 } } 
+            ])
+        random_article = random_article[0]
+
+        console.log(random_article)
+
         res.status(statusCode['200_ok']).json({
             errors: false,
             message: 'Get Article Data',
-            data: article
+            data: {
+                article: article,
+                recomendation_article: {
+                    _id: random_article._id,
+                    title: random_article.title,
+                    author: random_article.author,
+                    source: random_article.source,
+                    pic: random_article.pic,
+                    content: random_article.content
+                }
+            }
         })
 
     } catch (e) {
@@ -123,6 +142,9 @@ exports.postNewArticle = async (req, res, next) => {
         if(req.file) {
             req.type = 'article'
             pic = await fileController.uploadFile(req)
+        } else{
+            // * gunakan template foto 
+            pic = process.env.DEFAULT_PIC_ARTICLE
         }
 
         // * new article
@@ -138,11 +160,11 @@ exports.postNewArticle = async (req, res, next) => {
 
         res.status(statusCode['200_ok']).json({
             errors: false,
-            message: 'Sukses tambah artikel baru'
+            message: 'Sukses add new Article'
         })
 
     } catch (e) {
-        if(e.statusCode){
+        if(!e.statusCode){
             e.statusCode = statusCode['500_internal_server_error']
         }
         next(e)
@@ -173,10 +195,9 @@ exports.editArticle = async (req, res, next) => {
                 return throw_err("Proses edit artikel gagal", statusCode['400_bad_request'])
             }
 
-            article.pic = null
+            article.pic = process.env.DEFAULT_PIC_ARTICLE
         }
-        // * ------------------ ------------------ ------------------ ------------------
-
+        // * ------------------ ------------------ ------------------
 
         const new_title = req.body.title
         const new_author = req.body.author
@@ -199,7 +220,7 @@ exports.editArticle = async (req, res, next) => {
 
             article.pic = pic
         }
-        // * ------------------ ------------------ ------------------ ------------------
+        // * ------------------ ------------------ ------------------ 
 
         article.title = new_title
         article.author = new_author
@@ -210,16 +231,54 @@ exports.editArticle = async (req, res, next) => {
 
         res.status(statusCode['200_ok']).json({
             errors: false,
-            message: 'Sukses edit artikel'
+            message: 'Succes edit article'
         })
 
     } catch (e) {
-        if(e.statusCode){
+        if(!e.statusCode){
             e.statusCode = statusCode['500_internal_server_error']
         }
         next(e)
     }
 }
+
+
+
+
+
+exports.deleteArticleImages = async (req, res, next) => {
+    try{
+        const id_artikel = req.params.id_article
+        const article = await Article.findById(id_artikel)
+        if(!article){
+            throw_err("Artikel tidak ditemukan", statusCode['404_not_found'])
+        }
+
+        req.type = 'article'
+        req.file_url = article.pic
+
+        const del_pic = await fileController.deleteItem(req)
+        // * jika proses hapus gagal
+        if(!del_pic){
+            return throw_err("Proses edit artikel gagal", statusCode['400_bad_request'])
+        }
+
+        article.pic = process.env.DEFAULT_PIC_ARTICLE
+
+        await article.save()
+
+        res.status(statusCode['200_ok']).json({
+            errors: false,
+            message: 'Success delete article thumbnail'
+        })
+
+    } catch (e) {
+        if(!e.statusCode){
+            e.statusCode = statusCode['500_internal_server_error']
+        }
+        next(e)
+    }
+}   
 
 
 
@@ -242,11 +301,11 @@ exports.deleteArticle = async (req, res, next) => {
 
         res.status(statusCode['200_ok']).json({
             errors: false,
-            message: 'Sukses delete artikel'
+            message: 'Success delete Article'
         })
 
     } catch (e) {
-        if(e.statusCode){
+        if(!e.statusCode){
             e.statusCode = statusCode['500_internal_server_error']
         }
         next(e)

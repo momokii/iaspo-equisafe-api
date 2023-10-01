@@ -13,6 +13,8 @@ router.get('/:id_article',  is_auth, articleController.getOneArticle)
 
 router.post('/', is_auth, is_admin, process_file, articleController.postNewArticle)
 
+router.patch('/:id_article/delete-thumbnail', is_auth, is_admin, articleController.deleteArticleImages)
+
 router.patch('/:id_article', is_auth, process_file, is_admin, articleController.editArticle)
 
 router.delete('/:id_article', is_auth, is_admin, articleController.deleteArticle)
