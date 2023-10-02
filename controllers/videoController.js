@@ -3,6 +3,7 @@ const statusCode = require('../utils/http-response').httpStatus_keyValue
 const Video = require('../models/video')
 const User = require('../models/user')
 const fileController = require('../controllers/fileController')
+const mongoose = require('mongoose')
 
 
 // * -------------------------------- FUNCTION
@@ -273,6 +274,10 @@ exports.edit_video_thumbnail = async (req, res, next) => {
 
 
 exports.delete_video = async (req, res, next) => {
+
+    const session  = await mongoose.startSession()
+    session.startTransaction()
+
     try{
         const id_video = req.params.id_video
         const video = await Video.findById(id_video)
@@ -288,12 +293,16 @@ exports.delete_video = async (req, res, next) => {
         // * delete video from cloud storage
         await fileController.deleteItem(req)
 
+        await session.commitTransaction()
+        session.endSession()
+
         res.status(statusCode['200_ok']).json({
             errors: false,
             message: 'Success delete video data'
         })
 
     } catch (e) {
+        await session.abortTransaction()
         if(!e.statusCode){
             e.statusCode = statusCode['500_internal_server_error']
         }

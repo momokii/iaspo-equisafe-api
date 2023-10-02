@@ -2,6 +2,7 @@ require('dotenv')
 const statusCode = require('../utils/http-response').httpStatus_keyValue
 const Article = require('../models/article')
 const fileController = require('../controllers/fileController')
+const mongoose = require('mongoose')
 
 // * -------------------------------- routing
 
@@ -285,6 +286,10 @@ exports.deleteArticleImages = async (req, res, next) => {
 
 
 exports.deleteArticle = async (req, res, next) => {
+
+    const session = await mongoose.startSession()
+    session.startTransaction()
+
     try{
         const del_article = await Article.findById(req.params.id_article)
         if(!del_article){
@@ -299,12 +304,16 @@ exports.deleteArticle = async (req, res, next) => {
 
         await Article.findByIdAndDelete(req.params.id_article)
 
+        await session.commitTransaction()
+        session.endSession()
+
         res.status(statusCode['200_ok']).json({
             errors: false,
             message: 'Success delete Article'
         })
 
     } catch (e) {
+        await session.abortTransaction()
         if(!e.statusCode){
             e.statusCode = statusCode['500_internal_server_error']
         }
