@@ -107,6 +107,8 @@
  *                           type: string
  *                         link:
  *                           type: string
+ *                         thumbnail_link:
+ *                           type: string    
  *                     emergency_contact:
  *                       type: object
  *                       properties:
@@ -195,6 +197,8 @@
  *                           type: string
  *                         link:
  *                           type: string
+ *                         thumbnail_link:
+ *                           type: string    
  *                     emergency_contact:
  *                       type: object
  *                       properties:

@@ -13,7 +13,10 @@ const videoSchema = new Schema({
     link: {
         type: String,
         required: true
-    }
+    },
+    thumbnail_link: {
+        type: String,
+    },
 }, {
     timestamps: true
 })

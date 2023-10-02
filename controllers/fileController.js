@@ -53,7 +53,6 @@ exports.uploadFile = async (req, res, next) => {
         );
 
         blobStream.on("finish", async (data) => {
-            // * Create URL for directly file access via HTTP.
             publicUrl = format(
                 `https://storage.googleapis.com/${bucket.name}/${blob.name}`
             );

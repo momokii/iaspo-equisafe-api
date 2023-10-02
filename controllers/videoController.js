@@ -1,10 +1,11 @@
+require('dotenv')
 const statusCode = require('../utils/http-response').httpStatus_keyValue
 const Video = require('../models/video')
 const User = require('../models/user')
 const fileController = require('../controllers/fileController')
 
 
-// * -------------------------------- routing
+// * -------------------------------- FUNCTION
 
 function throw_err(msg, code){
     const err = new Error(msg)
@@ -13,13 +14,15 @@ function throw_err(msg, code){
 }
 
 
+// * -------------------------------- CONTROLLER
+
 exports.getAllVideo = async (req, res, next) => {
     try{
 
         const total_data = await Video.find().countDocuments()
         // * karena pake search -> maka tidak gunakan skip/limit pada proses query dan dilakukan secara manual dengan urutan | query -> filter search -> pagination
         let all_video = await Video.find()
-            .select('title description link')
+            .select('title description link thumbnail_link')
         const response = {
             errors: false,
             message: 'Get Video Data',
@@ -70,9 +73,9 @@ exports.getOneVideo = async (req, res, next) => {
     try{
         const id_video = req.params.id_video
         const video = await Video.findById(id_video)
-            .select("title description link")
+            .select("title description link thumbnail_link")
         if(!video){
-            throw_err("Data Video Tidak Ditemukan", statusCode['404_not_found'])
+            throw_err("Data Video Not Found", statusCode['404_not_found'])
         }
 
 
@@ -97,7 +100,7 @@ exports.getOneVideo = async (req, res, next) => {
 exports.post_video = async (req, res, next) => {
     try{
         if(!req.file){
-            throw_err("Video tidak diinputkan, proses gagal", statusCode['400_bad_request'])
+            throw_err("Video not inputed, process failed", statusCode['400_bad_request'])
         }
 
         const title = req.body.title
@@ -111,14 +114,15 @@ exports.post_video = async (req, res, next) => {
         const new_video = new Video({
             title: title,
             description: description,
-            link: public_url
+            link: public_url,
+            thumbnail_link: process.env.DEFAULT_PIC_ARTICLE
         })
 
         await new_video.save()
 
         res.status(statusCode['200_ok']).json({
             errors: false,
-            message: 'Sukses tambah video'
+            message: 'Success add new video'
         })
 
     } catch (e) {
@@ -138,7 +142,7 @@ exports.post_recent_video = async (req, res, next) => {
         const id_video = req.params.id_video
         const video = await Video.findById(id_video)
         if(!video){
-            throw_err("Data Video Tidak Ditemukan", statusCode['404_not_found'])
+            throw_err("Data Video Not Found", statusCode['404_not_found'])
         }
 
         const user = await User.findById(req.userId)
@@ -168,7 +172,7 @@ exports.edit_video = async (req, res, next) => {
         const id_video = req.params.id_video
         const video = await Video.findById(id_video)
         if(!video){
-            throw_err(throw_err("Data Video Tidak Ditemukan", statusCode['404_not_found']))
+            throw_err(throw_err("Data Video Not Found", statusCode['404_not_found']))
         }
 
         const new_title = req.body.title
@@ -182,7 +186,7 @@ exports.edit_video = async (req, res, next) => {
             const del_video = await fileController.deleteItem(req)
 
             if(!del_video){
-                throw_err("Proses upload video baru gagal", statusCode['400_bad_request'])
+                throw_err("Upload new video failed", statusCode['400_bad_request'])
             }
 
             new_video = await fileController.uploadFile(req)
@@ -198,10 +202,65 @@ exports.edit_video = async (req, res, next) => {
 
         res.status(statusCode['200_ok']).json({
             errors: false,
-            message: 'Sukses edit video data'
+            message: 'Success edit video data'
         })
 
     } catch (e) {
+        if(!e.statusCode){
+            e.statusCode = statusCode['500_internal_server_error']
+        }
+        next(e)
+    }
+}
+
+
+
+
+
+exports.edit_video_thumbnail = async (req, res, next) => {
+    try{
+        const id_video = req.body.id_video 
+        const video = await Video.findById(id_video)
+        if(!video){
+            throw_err("Data Video Not Found", statusCode['404_not_found'])
+        }
+        req.type = 'vid'
+        req.file_url = video.thumbnail_link
+
+        if(req.body.delete_thumbnail){
+            if(video.thumbnail_link !== process.env.DEFAULT_PIC_ARTICLE){
+                req.file_url = video.thumbnail_link
+                const del_thumbnail = await fileController.deleteItem(req)
+                if(!del_thumbnail){
+                    throw_err("Delete thumbnail failed", statusCode['400_bad_request'])
+                }
+                video.thumbnail_link = process.env.DEFAULT_PIC_ARTICLE
+                await video.save()
+            }
+
+            return res.status(statusCode['200_ok']).json({
+                errors: false,
+                message: 'Success edit video thumbnail data'
+            })
+        }
+        
+
+        if(video.thumbnail_link !== process.env.DEFAULT_PIC_ARTICLE){
+            const del_thumbnail = await fileController.deleteItem(req)
+            if(!del_thumbnail){
+                throw_err("Delete thumbnail failed", statusCode['400_bad_request'])
+            }
+        }
+        const new_thumbnail = await fileController.uploadFile(req)
+        video.thumbnail_link = new_thumbnail
+        await video.save()
+        
+        res.status(statusCode['200_ok']).json({
+            errors: false,
+            message: 'Success edit video thumbnail data'
+        })
+
+    } catch(e){
         if(!e.statusCode){
             e.statusCode = statusCode['500_internal_server_error']
         }
@@ -218,7 +277,7 @@ exports.delete_video = async (req, res, next) => {
         const id_video = req.params.id_video
         const video = await Video.findById(id_video)
         if(!video){
-            throw_err("Data Video Tidak Ditemukan", statusCode['404_not_found'])
+            throw_err("Data Video Not Found", statusCode['404_not_found'])
         }
 
         req.file_url = video.link //* path video akan dihapus
@@ -227,12 +286,11 @@ exports.delete_video = async (req, res, next) => {
         await Video.findByIdAndDelete(id_video)
 
         // * delete video from cloud storage
-
         await fileController.deleteItem(req)
 
         res.status(statusCode['200_ok']).json({
             errors: false,
-            message: 'Sukses delete video data'
+            message: 'Success delete video data'
         })
 
     } catch (e) {

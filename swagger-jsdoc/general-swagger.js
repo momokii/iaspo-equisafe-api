@@ -22,6 +22,13 @@
 /**
  * @swagger
  * tags:
+ *   name: Disaster-Maps
+ *   description: Disaster-Maps Specific Endpoint Access
+ */
+
+/**
+ * @swagger
+ * tags:
  *   name: Game - Pilgan
  *   description: Game - Pilgan Specific Endpoint Access
  */

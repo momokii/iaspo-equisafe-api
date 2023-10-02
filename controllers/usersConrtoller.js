@@ -61,7 +61,7 @@ exports.get_info_self = async(req, res, next) => {
             .select("username nam role last_video emergency_contact")
             .populate({
                 path: "last_video",
-                select: "title description link"
+                select: "title description link thumbnail_link"
             })
             .lean()
 
@@ -106,7 +106,7 @@ exports.get_info = async (req, res, next) => {
             .select('username name role last_video emergency_contact')
             .populate({
                 path: 'last_video',
-                select: 'title description link'
+                select: 'title description link thumbnail_link'
             })
             .lean()
 

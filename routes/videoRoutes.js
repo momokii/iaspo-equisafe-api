@@ -15,6 +15,8 @@ router.post('/', is_auth, is_admin, process_file ,videoController.post_video)
 
 router.patch('/:id_video/recent', is_auth, videoController.post_recent_video)
 
+router.patch('/:id_video/thumbnail', is_auth, is_admin, process_file, videoController.edit_video_thumbnail)
+
 router.patch('/:id_video', is_auth, is_admin, process_file ,videoController.edit_video)
 
 router.delete('/:id_video', is_auth, is_admin, videoController.delete_video)

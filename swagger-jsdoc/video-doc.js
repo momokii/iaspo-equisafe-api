@@ -52,6 +52,8 @@
  *                             type: string
  *                           link:
  *                             type: string
+ *                           thumbnail_link:
+ *                             type: string  
  *
  *       '401':
  *         description: Token not valid / Account doesnt have access
@@ -122,6 +124,8 @@
  *                       type: string
  *                     link:
  *                       type: string
+ *                     thumbnail_link:
+ *                       type: string 
  *
  *       '404':
  *         description: Video data not found
@@ -201,7 +205,7 @@
  *                 errors:
  *                   example: false
  *                 message:
- *                   example: Sukses tambah video
+ *                   example: Success add new video
  *
  *       '400':
  *         description: Process Post new video error
@@ -317,6 +321,85 @@
 
 
 
+//*! /videos/{id_video}/thumbnail
+/**
+ * @swagger
+ * /videos/{id_video}/thumbnail:
+ *   patch:
+ *     summary: Edit video thumbnail data
+ *     tags: [Video]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               id_video:
+ *                 type: string
+ *               delete_thumbnail:
+ *                 type: boolean
+ *                 description: set true if you just need to delete thumbnail
+ *               file:
+ *                 type: file 
+ *
+ *     responses:
+ *       '200':
+ *         description: Update user last video played info data
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 errors:
+ *                   example: false
+ *                 message:
+ *                   example: Success edit video thumbnail data
+ *
+ *       '401':
+ *         description: Token not valid / Account doesnt have access
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 errors:
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *
+ *       '404':
+ *         description: Video data not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 errors:
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *
+ *       '500':
+ *         description: Internal Server Error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 errors:
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *
+ *
+ */
+
+
+
+
+
 //*! /videos/{id_video}
 /**
  * @swagger
@@ -356,7 +439,7 @@
  *                 errors:
  *                   example: false
  *                 message:
- *                   example: Sukses edit video data
+ *                   example: Succses edit video data
  *
  *       '400':
  *         description: Process Update new video error
@@ -439,7 +522,7 @@
  *                 errors:
  *                   example: false
  *                 message:
- *                   example: Sukses delete video data
+ *                   example: Succses delete video data
  *
  *       '401':
  *         description: Token not valid / Account doesnt have access
