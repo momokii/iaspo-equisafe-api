@@ -78,13 +78,13 @@ exports.getOneArticle = async (req, res, next) => {
     try{
         const id_article = req.params.id_article
         if(!id_article){
-            throw_err("Artikel Tidak Ditemukan", statusCode['404_not_found'])
+            throw_err("Article data not found", statusCode['404_not_found'])
         }
 
         const article = await Article.findById(id_article)
             .select('title author source pic content')
         if(!article){
-            throw_err("Artikel Tidak Ditemukan", statusCode['404_not_found'])
+            throw_err("Article data not found", statusCode['404_not_found'])
         }
 
         if(article.pic === null){
@@ -161,7 +161,7 @@ exports.postNewArticle = async (req, res, next) => {
 
         res.status(statusCode['200_ok']).json({
             errors: false,
-            message: 'Sukses add new Article'
+            message: 'Success add new Article'
         })
 
     } catch (e) {
@@ -181,7 +181,7 @@ exports.editArticle = async (req, res, next) => {
         const id_artikel = req.params.id_article
         const article = await Article.findById(id_artikel)
         if(!article){
-            throw_err("Artikel tidak ditemukan", statusCode['404_not_found'])
+            throw_err("Article data not found", statusCode['404_not_found'])
         }
 
         req.type = 'article'
@@ -193,7 +193,7 @@ exports.editArticle = async (req, res, next) => {
 
             // * jika proses hapus gagal
             if(!del_pic){
-                return throw_err("Proses edit artikel gagal", statusCode['400_bad_request'])
+                return throw_err("Edit process article failed", statusCode['400_bad_request'])
             }
 
             article.pic = process.env.DEFAULT_PIC_ARTICLE
@@ -213,7 +213,7 @@ exports.editArticle = async (req, res, next) => {
 
                 // * jika proses hapus gagal
                 if(!del_pic){
-                    return throw_err("Proses edit artikel gagal", statusCode['400_bad_request'])
+                    return throw_err("Edit process article failed", statusCode['400_bad_request'])
                 }
             }
 
@@ -252,7 +252,7 @@ exports.deleteArticleImages = async (req, res, next) => {
         const id_artikel = req.params.id_article
         const article = await Article.findById(id_artikel)
         if(!article){
-            throw_err("Artikel tidak ditemukan", statusCode['404_not_found'])
+            throw_err("Article data not found", statusCode['404_not_found'])
         }
 
         req.type = 'article'
@@ -261,7 +261,7 @@ exports.deleteArticleImages = async (req, res, next) => {
         const del_pic = await fileController.deleteItem(req)
         // * jika proses hapus gagal
         if(!del_pic){
-            return throw_err("Proses edit artikel gagal", statusCode['400_bad_request'])
+            return throw_err("Edit process article failed", statusCode['400_bad_request'])
         }
 
         article.pic = process.env.DEFAULT_PIC_ARTICLE
@@ -293,7 +293,7 @@ exports.deleteArticle = async (req, res, next) => {
     try{
         const del_article = await Article.findById(req.params.id_article)
         if(!del_article){
-            throw_err("Artikel Tidak Ditemukan", statusCode['404_not_found'])
+            throw_err("Article data not found", statusCode['404_not_found'])
         }
 
         if(del_article.pic !== null) {

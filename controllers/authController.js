@@ -53,7 +53,7 @@ exports.signup = async (req, res, next) => {
 
         res.status(statusCode['200_ok']).json({
             errors: false,
-            message: 'Sukses buat akun baru'
+            message: 'Success create new account'
         })
 
     } catch (e) {
@@ -77,12 +77,12 @@ exports.login = async (req, res, next) => {
             username: username
         })
         if(!user){
-            throw_err('Username / Password Salah', statusCode['400_bad_request'])
+            throw_err('Wrong Username / Password', statusCode['400_bad_request'])
         }
 
         const check_pass = await bcrypt.compare(password, user.password)
         if(!check_pass){
-            throw_err("Username / Password Salah", statusCode['400_bad_request'])
+            throw_err("Wrong Username / Password", statusCode['400_bad_request'])
         }
 
         const random_token = crypto.randomBytes(32).toString('hex')
@@ -97,7 +97,7 @@ exports.login = async (req, res, next) => {
 
         res.status(statusCode['200_ok']).json({
             errors: false,
-            message: 'Login Sukses',
+            message: 'Login Success',
             data: {
                 access_token : access_token,
                 token_type: 'Bearer'
@@ -120,14 +120,14 @@ exports.logout = async (req, res, next) => {
     try{
         const user = await User.findById(req.userId)
         if(!user){
-            throw_err("Token tidak valid", statusCode['401_unauthorized'])
+            throw_err("Token not valid", statusCode['401_unauthorized'])
         }
         user.token.auth = null
         await user.save()
 
         res.status(statusCode['200_ok']).json({
             errors: false,
-            message: 'Logout sukses'
+            message: 'Success Logout'
         })
 
     } catch (e) {

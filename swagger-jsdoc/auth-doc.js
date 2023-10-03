@@ -29,7 +29,7 @@
  *                 errors:
  *                   example: false
  *                 message:
- *                   example: Login Sukses
+ *                   example: Login Success
  *                 data:
  *                   type: object
  *                   properties:
@@ -38,7 +38,7 @@
  *                     token_type:
  *                       example: Bearer
  *       '400':
- *         description: Username / Password Salah
+ *         description: Wrong Username / Password
  *         content:
  *           application/json:
  *             schema:
@@ -103,9 +103,9 @@
  *                 errors:
  *                   example: false
  *                 message:
- *                   example: Sukses buat akun baru
+ *                   example: Success create new account
  *       '400':
- *         description: Username sudah digunakan / format password tidak sesuai
+ *         description: Username is used / format password wrong
  *         content:
  *           application/json:
  *             schema:
@@ -154,7 +154,7 @@
  *                 errors:
  *                   example: false
  *                 message:
- *                   example: Logout Sukses
+ *                   example: Success Logout
  *       '401':
  *         description: Token not valid / Account doesnt have access
  *         content:

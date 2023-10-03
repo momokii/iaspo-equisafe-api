@@ -257,7 +257,7 @@
  *                 errors:
  *                   example: false
  *                 message:
- *                   example: Sukses add new Article
+ *                   example: Succes add new Article
  *
  *       '400':
  *         description: Process Post new article error
