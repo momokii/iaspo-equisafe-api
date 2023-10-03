@@ -1,5 +1,4 @@
 const statusCode = require('../utils/http-response').httpStatus_keyValue
-const mapsDisaster = require('../models/maps-disaster')
 const MapsDisaster = require('../models/maps-disaster')
 
 
@@ -282,7 +281,7 @@ exports.deleteMapsData = async(req, res, next) => {
             throw_err("Data maps not found", statusCode['404_not_found'])
         }
 
-        await mapsDisaster.findByIdAndDelete(id_maps)
+        await MapsDisaster.findByIdAndDelete(id_maps)
 
         res.status(statusCode['200_ok']).json({
             errors: false,

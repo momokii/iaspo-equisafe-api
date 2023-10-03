@@ -27,6 +27,10 @@ exports.uploadFile = async (req, res, next) => {
             filepath = "articles/"
 
             filename = filename + '.png'
+        } else if(folderName === 'template'){
+            filepath = "templates/"
+
+            filename = req.template_type +  '-default.png'
         } else {
             // * masuk sini berarti jika tipe -> video
             filepath = "videos/"
@@ -88,6 +92,11 @@ exports.deleteItem = async (req, res, next) => {
             folderName = 'articles/'
 
             uploadPath = folderName + filename
+        } else if(req.type === 'template'){
+            folderName = 'templates/'
+
+            uploadPath = folderName + filename
+
         } else {
             folderName = 'videos/'
 

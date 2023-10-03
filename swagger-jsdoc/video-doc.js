@@ -175,7 +175,7 @@
  * @swagger
  * /videos:
  *   post:
- *     summary: Post new video data
+ *     summary: Post new video data - admin exclusive
  *     tags: [Video]
  *     security:
  *       - bearerAuth: []
@@ -326,7 +326,7 @@
  * @swagger
  * /videos/{id_video}/thumbnail:
  *   patch:
- *     summary: Edit video thumbnail data
+ *     summary: Edit video thumbnail data - admin exclusive
  *     tags: [Video]
  *     security:
  *       - bearerAuth: []
@@ -405,7 +405,7 @@
  * @swagger
  * /videos/{id_video}:
  *   patch:
- *     summary: Edit video data
+ *     summary: Edit video data - admin exclusive
  *     tags: [Video]
  *     parameters:
  *       - name: id_video
@@ -501,7 +501,7 @@
  * @swagger
  * /videos/{id_video}:
  *   delete:
- *     summary: delete video data
+ *     summary: delete video data - admin exclusive
  *     tags: [Video]
  *     parameters:
  *       - name: id_video

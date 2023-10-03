@@ -46,3 +46,10 @@
  *   name: Article
  *   description: Article Specific Endpoint Access
  */
+
+/**
+ * @swagger
+ * tags:
+ *   name: Thumbnail Template
+ *   description: Thumbnail Specific Endpoint Access
+ */

@@ -23,6 +23,7 @@ const userRouting = require('./routes/userRoutes')
 const gameJawabanRouting = require('./routes/game-jawabanRoutes')
 const gamePilganRouting = require('./routes/game-pilganRoutes')
 const mapsDisasterRouting = require('./routes/mapsDisasterRoutes')
+const templateThumbnailRouting = require('./routes/templateThumbnailRoutes')
 
 // * ----------------- ----------------- app
 
@@ -83,6 +84,7 @@ app.use('/users', userRouting)
 app.use('/articles', articleRouting)
 app.use('/maps', mapsDisasterRouting)
 app.use('/videos', videoRouting)
+app.use('/templates', templateThumbnailRouting)
 app.use('/games/jawaban', gameJawabanRouting)
 app.use('/games/pilgan', gamePilganRouting)
 
