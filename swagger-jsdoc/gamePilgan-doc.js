@@ -100,7 +100,7 @@
  *                 errors:
  *                   example: false
  *                 message:
- *                   example: Data Pertanyaan dan Jawaban
+ *                   example: Question and asnwer data
  *                 data:
  *                   type: object
  *                   properties:
@@ -188,7 +188,7 @@
  *                 errors:
  *                   example: false
  *                 message:
- *                   example: Data Pertanyaan dan Jawaban
+ *                   example: Question and asnwer data
  *                 data:
  *                   type: object
  *                   properties:
@@ -386,7 +386,7 @@
  *                 errors:
  *                   example: false
  *                 message:
- *                   example: Berhasil tambah pertanyaan baru
+ *                   example: Success add new question
  *
  *       '400':
  *         description: Error post new question
@@ -469,7 +469,7 @@
  *
  *     responses:
  *       '200':
- *         description: Edit pertanyaan pilgan singkat games question data
+ *         description: Edit question
  *         content:
  *           application/json:
  *             schema:
@@ -478,7 +478,7 @@
  *                 errors:
  *                   example: false
  *                 message:
- *                   example: Sukses edit pertanyaan
+ *                   example: Success edit question
  *
  *       '400':
  *         description: Error edit question
@@ -552,7 +552,7 @@
  *
  *     responses:
  *       '200':
- *         description: Delete pertanyaan pilgan games question data
+ *         description: Delete question
  *         content:
  *           application/json:
  *             schema:
@@ -561,7 +561,7 @@
  *                 errors:
  *                   example: false
  *                 message:
- *                   example: Sukses hapus data pertanyaan
+ *                   example: Success delete question
  *
  *       '401':
  *         description: Token not valid / Account doesnt have access

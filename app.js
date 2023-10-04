@@ -35,9 +35,9 @@ const swaggerOptions = {
             title: 'IASPO - EquiSafe API',
             description: 'The Equisafe API is designed to accommodate the requirements of Equisafe application, which is expected to operate on both mobile platforms for general users and web platforms to cater to the needs of administrators using a web-based CMS. This API provides the necessary endpoints and functionality to seamlessly support the dual nature of the application, enabling it to serve a wide range of user roles and functions efficiently.',
             contact: {
-                name: 'nama',
-                url: 'kosong',
-                email: 'aa'
+                name: 'Equisafe',
+                url: '-',
+                email: '-'
             }
         },
         servers: [

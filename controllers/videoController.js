@@ -16,7 +16,7 @@ function throw_err(msg, code){
 
 
 // * -------------------------------- CONTROLLER
-
+  
 exports.getAllVideo = async (req, res, next) => {
     try{
 
@@ -106,17 +106,22 @@ exports.post_video = async (req, res, next) => {
 
         const title = req.body.title
         const description = req.body.description
-        // * karena ini upload video maka sesuai dengan file controller
         req.type = 'vid'
 
-        // * upload video ke cloud storage dengan controller terkait dan dapatkan link tempat uploadnya
+        const video_extension = ['mp4', 'webm', 'ogg', 'mkv', 'mov']
+        const filename = req.file.originalname.split('.')
+        const file_ext = filename[filename.length - 1]
+        if(!video_extension.includes(file_ext)){
+            throw_err("File extension allowed only mp4, webm, ogg, mkv, mov", statusCode['400_bad_request'])
+        }
+
         const public_url = await fileController.uploadFile(req)
 
         const new_video = new Video({
             title: title,
             description: description,
             link: public_url,
-            thumbnail_link: process.env.DEFAULT_PIC_ARTICLE
+            thumbnail_link: process.env.DEFAULT_PIC_VIDEO
         })
 
         await new_video.save()
@@ -180,10 +185,18 @@ exports.edit_video = async (req, res, next) => {
         const new_description = req.body.description
         let new_video
 
-        // * jika data video do ganti
+        // * jika data video di ganti
         if(req.file){
             req.type = 'vid'
             req.file_url = video.link
+
+            const video_extension = ['mp4', 'webm', 'ogg', 'mkv', 'mov']
+            const filename = req.file.originalname.split('.')
+            const file_ext = filename[filename.length - 1]
+            if(!video_extension.includes(file_ext)){
+                throw_err("File extension allowed only mp4, webm, ogg, mkv, mov", statusCode['400_bad_request'])
+            }
+
             const del_video = await fileController.deleteItem(req)
 
             if(!del_video){
@@ -229,13 +242,13 @@ exports.edit_video_thumbnail = async (req, res, next) => {
         req.file_url = video.thumbnail_link
 
         if(req.body.delete_thumbnail){
-            if(video.thumbnail_link !== process.env.DEFAULT_PIC_ARTICLE){
+            if(video.thumbnail_link !== process.env.DEFAULT_VIDEO){
                 req.file_url = video.thumbnail_link
                 const del_thumbnail = await fileController.deleteItem(req)
                 if(!del_thumbnail){
                     throw_err("Delete thumbnail failed", statusCode['400_bad_request'])
                 }
-                video.thumbnail_link = process.env.DEFAULT_PIC_ARTICLE
+                video.thumbnail_link = process.env.DEFAULT_PIC_VIDEO
                 await video.save()
             }
 
@@ -244,9 +257,8 @@ exports.edit_video_thumbnail = async (req, res, next) => {
                 message: 'Success edit video thumbnail data'
             })
         }
-        
 
-        if(video.thumbnail_link !== process.env.DEFAULT_PIC_ARTICLE){
+        if(video.thumbnail_link !== process.env.DEFAULT_PIC_VIDEO){
             const del_thumbnail = await fileController.deleteItem(req)
             if(!del_thumbnail){
                 throw_err("Delete thumbnail failed", statusCode['400_bad_request'])

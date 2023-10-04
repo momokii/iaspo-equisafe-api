@@ -100,7 +100,7 @@
  *                 errors:
  *                   example: false
  *                 message:
- *                   example: Data Pertanyaan dan Jawaban
+ *                   example: Question and answer data
  *                 data:
  *                   type: object
  *                   properties:
@@ -184,7 +184,7 @@
  *                 errors:
  *                   example: false
  *                 message:
- *                   example: Data Pertanyaan dan Jawaban
+ *                   example: Question and answer data
  *                 data:
  *                   type: object
  *                   properties:
@@ -359,7 +359,7 @@
  *
  *     responses:
  *       '200':
- *         description: Post/ tambah pertanyaan jawaban singkat games question data
+ *         description: Add new question data
  *         content:
  *           application/json:
  *             schema:
@@ -368,7 +368,7 @@
  *                 errors:
  *                   example: false
  *                 message:
- *                   example: Berhasil tambah pertanyaan baru
+ *                   example: Success add new question
  *
  *       '401':
  *         description: Token not valid / Account doesnt have access
@@ -435,7 +435,7 @@
  *
  *     responses:
  *       '200':
- *         description: Edit pertanyaan jawaban singkat games question data
+ *         description: Edit question data
  *         content:
  *           application/json:
  *             schema:
@@ -444,7 +444,7 @@
  *                 errors:
  *                   example: false
  *                 message:
- *                   example: Sukses edit pertanyaan
+ *                   example: Success edit question
  *
  *       '401':
  *         description: Token not valid / Account doesnt have access
@@ -506,7 +506,7 @@
  *
  *     responses:
  *       '200':
- *         description: Delete pertanyaan jawaban singkat games question data
+ *         description: Delete question data
  *         content:
  *           application/json:
  *             schema:
@@ -515,7 +515,7 @@
  *                 errors:
  *                   example: false
  *                 message:
- *                   example: Sukses hapus data pertanyaan
+ *                   example: Success delete question data
  *
  *       '401':
  *         description: Token not valid / Account doesnt have access

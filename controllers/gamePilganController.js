@@ -60,18 +60,18 @@ exports.get_one_question = async (req, res, next) => {
     try{
         const id_question = req.params.id_question
         if(!id_question){
-            throw_err('Data tidak ditemukan', statusCode['404_not_found'])
+            throw_err('Data not found', statusCode['404_not_found'])
         }
 
         const question = await GamePilgan.findById(id_question)
             .select('question question_pic choices answer')
         if(!question){
-            throw_err('Data tidak ditemukan', statusCode['404_not_found'])
+            throw_err('Data not found', statusCode['404_not_found'])
         }
 
         res.status(statusCode['200_ok']).json({
             errors: false,
-            message: 'Data Pertanyaan dan Jawaban',
+            message: 'Question and asnwer data',
             data: question [{
                 id : idnya,
                 username: usernamenya
@@ -104,7 +104,7 @@ exports.get_all_question = async (req, res, next) => {
 
         res.status(statusCode['200_ok']).json({
             errors: false,
-            message: 'Data Pertanyaan dan Jawaban',
+            message: 'Question and answer data',
             data: {
                 total_data: total_data,
                 current_page: current_page,
@@ -180,7 +180,7 @@ exports.post_question = async (req, res, next) => {
 
         //* -> lakukan pengecekan bahwa "jawaban" pasti ada dalam pilihan untuk dipastikan saja agar dapat berjalan sesuai diharapkan
         if(!pilihan_jawaban.includes(answer)){
-            throw_err("Jawaban tidak tersedia dalam pilihan, error", statusCode['400_bad_request'])
+            throw_err("Error, Asnwer not include in choices", statusCode['400_bad_request'])
         }
 
         const new_question = new GamePilgan({
@@ -194,6 +194,13 @@ exports.post_question = async (req, res, next) => {
             req.type = 'games'
             req.game = 'pilgan'
 
+            const ext_allowed = ['jpg', 'jpeg', 'png', 'gif']
+            const file_name = req.file.originalname.split('.')
+            const file_ext = file_name[file_name.length - 1]
+            if(!ext_allowed.includes(file_ext)){
+                throw_err("File extension allowed only jpg, jpeg, png, gif", statusCode['400_bad_request'])
+            }
+
             question_pic = await fileController.uploadFile(req)
             new_question.question_pic = question_pic
         }
@@ -202,7 +209,7 @@ exports.post_question = async (req, res, next) => {
 
         res.status(statusCode['200_ok']).json({
             errors: false,
-            message: 'Berhasil tambah pertanyaan baru'
+            message: 'Success add new question'
         })
 
     } catch (e) {
@@ -221,7 +228,7 @@ exports.edit_question = async (req, res, next) => {
     try{
         const question_edit = await GamePilgan.findById(req.params.id_question)
         if(!question_edit){
-            throw_err("Data tidak ditemukan, edit gagal", statusCode['404_not_found'])
+            throw_err("Data not found", statusCode['404_not_found'])
         }
 
         const new_question = req.body.question
@@ -240,7 +247,7 @@ exports.edit_question = async (req, res, next) => {
             const del_pic = await fileController.deleteItem(req)
 
             if(!del_pic){
-                return throw_err("Proses edit pertanyaan gagal", statusCode['400_bad_request'])
+                return throw_err("Edit process failed", statusCode['400_bad_request'])
             }
 
             question_edit.question_pic = null
@@ -252,15 +259,23 @@ exports.edit_question = async (req, res, next) => {
         question_edit.answer = new_answer
 
         if(!question_edit.choices.includes(question_edit.answer)){
-            throw_err("Jawaban tidak tersedia dalam pilihan, edit error", statusCode['400_bad_request'])
+            throw_err("Edit error, answer not included in choices", statusCode['400_bad_request'])
         }
 
         if(req.file && req.query.del_pic !== 'true'){
+
+            const ext_allowed = ['jpg', 'jpeg', 'png', 'gif']
+            const file_name = req.file.originalname.split('.')
+            const file_ext = file_name[file_name.length - 1]
+            if(!ext_allowed.includes(file_ext)){
+                throw_err("File extension allowed only jpg, jpeg, png, gif", statusCode['400_bad_request'])
+            }
+
             if(question_edit.question_pic){
                 const del_pic = await fileController.deleteItem(req)
 
                 if(!del_pic){
-                    return throw_err("Proses edit pertanyaan gagal", statusCode['400_bad_request'])
+                    return throw_err("Edit process failed", statusCode['400_bad_request'])
                 }
             }
 
@@ -272,7 +287,7 @@ exports.edit_question = async (req, res, next) => {
 
         res.status(statusCode['200_ok']).json({
             errors: false,
-            message: 'Sukses edit data pertanyaan'
+            message: 'Success edit question'
         })
 
     } catch (e) {
@@ -291,7 +306,7 @@ exports.delete_question = async (req, res, next) => {
     try{
         const question = await GamePilgan.findById(req.params.id_question)
         if(!question){
-            throw_err('Data tidak ditemukan, delete gagal', statusCode['404_not_found'])
+            throw_err('Data not found', statusCode['404_not_found'])
         }
 
         if(question.question_pic){
@@ -306,7 +321,7 @@ exports.delete_question = async (req, res, next) => {
 
         res.status(statusCode['200_ok']).json({
             errors: false,
-            message: 'Sukses hapus data pertanyaan'
+            message: 'Success delete question'
         })
 
     } catch (e) {

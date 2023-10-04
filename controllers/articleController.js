@@ -48,7 +48,7 @@ exports.getAllArticle = async (req, res, next) => {
         all_article = all_article.map(doc => {
             // * ketika artikel tidak punya gambar, maka dapat balikan/ berikan gambar template
             if(doc.pic === null){
-                doc.pic = "https://storage.googleapis.com/prjct-ie-dev-01/templates/article-default.png"
+                doc.pic = process.env.DEFAULT_PIC_ARTICLE
             }
             return doc
         })
@@ -88,7 +88,7 @@ exports.getOneArticle = async (req, res, next) => {
         }
 
         if(article.pic === null){
-            article.pic = "https://storage.googleapis.com/prjct-ie-dev-01/templates/article-default.png"
+            article.pic = process.env.DEFAULT_PIC_ARTICLE
         }
 
         let random_article = await Article.aggregate([
@@ -133,14 +133,18 @@ exports.postNewArticle = async (req, res, next) => {
         const author = req.body.author
         const source = req.body.source
         const content = req.body.content
-        // * set awal untuk gambar gunakan null
-        // * baru nanti di bawah di cek ketika ada file diupload berarti akan direplace dengan gambar baru
         let pic = null
-        // * jadi, ketika get data -> ketika nilai pic -> null
-        // * maka akan diberikan link ke gambar template untuk article
 
-        // * ketika ada file di upload
+        // * ketika ada file di upload / gunakan gambar
         if(req.file) {
+
+            const ext_allowed = ['jpg', 'jpeg', 'png', 'gif']
+            const file_name = req.file.originalname.split('.')
+            const file_ext = file_name[file_name.length - 1]
+            if(!ext_allowed.includes(file_ext)){
+                throw_err("File extension allowed only jpg, jpeg, png, gif", statusCode['400_bad_request'])
+            }
+
             req.type = 'article'
             pic = await fileController.uploadFile(req)
         } else{
@@ -188,7 +192,7 @@ exports.editArticle = async (req, res, next) => {
         req.file_url = article.pic
 
         // * misal bisa gunakan query untuk hapus gambar saja -> jadi akan ubah gambar jadi null
-        if(req.query.del_pic === 'true' && article.pic){
+        if(req.query.del_pic === 'true' && (article.pic !== process.env.DEFAULT_PIC_ARTICLE)){
             const del_pic = await fileController.deleteItem(req)
 
             // * jika proses hapus gagal
@@ -207,8 +211,15 @@ exports.editArticle = async (req, res, next) => {
 
         // * ketika gambar diubah menjadi gambar lain
         if(req.file && req.query.del_pic !== 'true'){
-            // * misal sebelumnya sudah ada gambar -> maka gambar sebelumnya akan direplace dahulu dengan hapus data gambar sebelumnya
-            if(article.pic){
+            
+            const ext_allowed = ['jpg', 'jpeg', 'png', 'gif']
+            const file_name = req.file.originalname.split('.')
+            const file_ext = file_name[file_name.length - 1]
+            if(!ext_allowed.includes(file_ext)){
+                throw_err("File extension allowed only jpg, jpeg, png, gif", statusCode['400_bad_request'])
+            }
+
+            if(article.pic !== process.env.DEFAULT_PIC_ARTICLE){
                 const del_pic = await fileController.deleteItem(req)
 
                 // * jika proses hapus gagal
@@ -258,15 +269,16 @@ exports.deleteArticleImages = async (req, res, next) => {
         req.type = 'article'
         req.file_url = article.pic
 
-        const del_pic = await fileController.deleteItem(req)
-        // * jika proses hapus gagal
-        if(!del_pic){
-            return throw_err("Edit process article failed", statusCode['400_bad_request'])
+        if(article.pic !== process.env.DEFAULT_PIC_ARTICLE){
+            const del_pic = await fileController.deleteItem(req)
+            // * jika proses hapus gagal
+            if(!del_pic){
+                return throw_err("Edit process article failed", statusCode['400_bad_request'])
+            }
+
+            article.pic = process.env.DEFAULT_PIC_ARTICLE
+            await article.save()
         }
-
-        article.pic = process.env.DEFAULT_PIC_ARTICLE
-
-        await article.save()
 
         res.status(statusCode['200_ok']).json({
             errors: false,
@@ -296,7 +308,7 @@ exports.deleteArticle = async (req, res, next) => {
             throw_err("Article data not found", statusCode['404_not_found'])
         }
 
-        if(del_article.pic !== null) {
+        if(del_article.pic !== process.env.DEFAULT_PIC_ARTICLE) {
             req.type = 'article'
             req.file_url = del_article.pic
             await fileController.deleteItem(req)
