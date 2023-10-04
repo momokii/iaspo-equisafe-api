@@ -162,18 +162,36 @@
  *                 data:
  *                   type: object
  *                   properties:
- *                     _id:
- *                       type: string
- *                     title:
- *                       type: string
- *                     author:
- *                       type: string
- *                     source:
- *                       type: string
- *                     pic:
- *                       type: string
- *                     content:
- *                       type: string
+ *                     article:
+ *                       type: object
+ *                       properties:  
+ *                         _id:
+ *                           type: string
+ *                         title:
+ *                           type: string
+ *                         author:
+ *                           type: string
+ *                         source:
+ *                           type: string
+ *                         pic:
+ *                           type: string
+ *                         content:
+ *                           type: string
+ *                     recomendation_article:
+ *                       type: object
+ *                       properties:  
+ *                         _id:
+ *                           type: string
+ *                         title:
+ *                           type: string
+ *                         author:
+ *                           type: string
+ *                         source:
+ *                           type: string
+ *                         pic:
+ *                           type: string
+ *                         content:
+ *                           type: string     
  *
  *       '401':
  *         description: Token not valid / Account doesnt have access
@@ -388,7 +406,7 @@
  *         description: id_article need to edit
  *       - name: del_pic
  *         in: query
- *         description: set to "true" if need to delete image from the article and set to default image
+ *         description: set to "true" if need to delete image from the article and set to default image and edit article data
  *
  *     requestBody:
  *       required: true
