@@ -348,7 +348,7 @@
  *                 type: boolean     
  *               edit_data:
  *                 type: boolean 
- *               edit_total_data:
+ *               edit_total_only:
  *                 type: boolean   
  *
  *
