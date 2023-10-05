@@ -72,10 +72,7 @@ exports.get_one_question = async (req, res, next) => {
         res.status(statusCode['200_ok']).json({
             errors: false,
             message: 'Question and asnwer data',
-            data: question [{
-                id : idnya,
-                username: usernamenya
-            }]
+            data: question
         })
 
     } catch (e) {

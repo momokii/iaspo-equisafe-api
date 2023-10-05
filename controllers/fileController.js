@@ -1,11 +1,27 @@
+require('dotenv')
 const { format } = require('util')
 const { Storage } = require('@google-cloud/storage')
 
-const storage = new Storage({ keyFilename: './ie-dev-01.json' })
-const bucket = storage.bucket('prjct-ie-dev-01')
+//const storage = new Storage({ keyFilename: './ie-dev-01.json' }) // * dev sa bucket account
+const storage = new Storage({
+    projectId: process.env.PROJECT_ID,
+    credentials:{
+        type: process.env.TYPE,
+        project_id: process.env.PROJECT_ID,
+        private_key_id: process.env.PRIVATE_KEY_ID,
+        private_key: process.env.PRIVATE_KEY.replace(/\\n/g, '\n'),
+        client_email: process.env.CLIENT_EMAIL,
+        client_id: process.env.CLIENT_ID,
+        auth_uri: process.env.AUTH_URI,
+        token_uri: process.env.TOKEN_URI,
+        auth_provider_x509_cert_url: process.env.AUTH_PROVIDER,
+        client_x509_cert_url: process.env.CLIENT_CERT_URL
+    }
+})
+
+const bucket = storage.bucket(process.env.BUCKET_PROD)
 
 const crypto = require('crypto')
-const {upload} = require("@google-cloud/storage/build/src/resumable-upload");
 
 
 exports.uploadFile = async (req, res, next) => {
@@ -35,7 +51,11 @@ exports.uploadFile = async (req, res, next) => {
             // * masuk sini berarti jika tipe -> video
             filepath = "videos/"
 
-            filename = filename + '.mp4'
+            if(req.thumbnail){
+                filename = filename + '.png'
+            } else{
+                filename = filename + '.mp4'
+            }
         }
 
 

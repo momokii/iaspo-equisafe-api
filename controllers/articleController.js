@@ -97,8 +97,6 @@ exports.getOneArticle = async (req, res, next) => {
             ])
         random_article = random_article[0]
 
-        console.log(random_article)
-
         res.status(statusCode['200_ok']).json({
             errors: false,
             message: 'Get Article Data',
@@ -271,7 +269,6 @@ exports.deleteArticleImages = async (req, res, next) => {
 
         if(article.pic !== process.env.DEFAULT_PIC_ARTICLE){
             const del_pic = await fileController.deleteItem(req)
-            // * jika proses hapus gagal
             if(!del_pic){
                 return throw_err("Edit process article failed", statusCode['400_bad_request'])
             }

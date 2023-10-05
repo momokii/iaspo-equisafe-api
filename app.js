@@ -12,8 +12,8 @@ const swaggerJSDoc = require('swagger-jsdoc')
 // * konstanta
 const PORT = process.env.PORT
 const MONGO = process.env.MONGO
-const MONGO_DEV = MONGO + 'dev-iaspo'
-const MONGO_PROD = MONGO + 'prod-iaspo'
+const MONGO_DEV = MONGO + process.env.MONGO_DEV
+const MONGO_PROD = MONGO + process.env.MONGO_PROD
 
 // * routing
 const authRouting = require('./routes/authRoutes')
@@ -105,7 +105,7 @@ app.use((error, req, res, next) => {
 // * -- app connect
 async function start_server(){
     try{
-        await mongoose.connect(MONGO_DEV)
+        await mongoose.connect(MONGO_PROD)
         app.listen(PORT)
         console.log('connected to http://localhost:' + PORT)
     } catch (e) {

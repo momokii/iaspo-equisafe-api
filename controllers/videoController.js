@@ -16,7 +16,7 @@ function throw_err(msg, code){
 
 
 // * -------------------------------- CONTROLLER
-  
+
 exports.getAllVideo = async (req, res, next) => {
     try{
 
@@ -241,8 +241,8 @@ exports.edit_video_thumbnail = async (req, res, next) => {
         req.type = 'vid'
         req.file_url = video.thumbnail_link
 
-        if(req.body.delete_thumbnail){
-            if(video.thumbnail_link !== process.env.DEFAULT_VIDEO){
+        if(req.body.delete_thumbnail === 'true'){
+            if(video.thumbnail_link !== process.env.DEFAULT_PIC_VIDEO){
                 req.file_url = video.thumbnail_link
                 const del_thumbnail = await fileController.deleteItem(req)
                 if(!del_thumbnail){
@@ -258,12 +258,25 @@ exports.edit_video_thumbnail = async (req, res, next) => {
             })
         }
 
+        if(!req.file){
+            throw_err("File not inputed, process failed", statusCode['400_bad_request'])
+        }
+
+        const ext_allowed = ['jpg', 'jpeg', 'png', 'gif']
+        const file_name = req.file.originalname.split('.')
+        const file_ext = file_name[file_name.length - 1]
+        if(!ext_allowed.includes(file_ext)){
+            throw_err("File extension allowed only jpg, jpeg, png, gif", statusCode['400_bad_request'])
+        }
+
         if(video.thumbnail_link !== process.env.DEFAULT_PIC_VIDEO){
             const del_thumbnail = await fileController.deleteItem(req)
             if(!del_thumbnail){
                 throw_err("Delete thumbnail failed", statusCode['400_bad_request'])
             }
         }
+
+        req.thumbnail = true
         const new_thumbnail = await fileController.uploadFile(req)
         video.thumbnail_link = new_thumbnail
         await video.save()
@@ -297,11 +310,18 @@ exports.delete_video = async (req, res, next) => {
             throw_err("Data Video Not Found", statusCode['404_not_found'])
         }
 
-        req.file_url = video.link //* path video akan dihapus
+        req.type = 'videos'
+        
+        // * pastikan juga untuk delete thumbnail jika ada
+        if(video.thumbnail_link !== process.env.DEFAULT_PIC_VIDEO){
+            req.file_url = video.thumbnail_link
+            await fileController.deleteItem(req)
+        }
 
         // * delete video data from database
         await Video.findByIdAndDelete(id_video)
 
+        req.file_url = video.link //* path video akan dihapus
         // * delete video from cloud storage
         await fileController.deleteItem(req)
 

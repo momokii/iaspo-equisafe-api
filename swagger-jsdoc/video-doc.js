@@ -321,10 +321,10 @@
 
 
 
-//*! /videos/{id_video}/thumbnail
+//*! /videos/thumbnail
 /**
  * @swagger
- * /videos/{id_video}/thumbnail:
+ * /videos/thumbnail:
  *   patch:
  *     summary: Edit video thumbnail data - admin exclusive
  *     tags: [Video]
