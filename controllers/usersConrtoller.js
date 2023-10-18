@@ -58,7 +58,7 @@ exports.check_username = async (req, res, next) => {
 exports.get_info_self = async(req, res, next) => {
     try {
         const user = await User.findById(req.userId)
-            .select("username nam role last_video emergency_contact")
+            .select("username name role last_video emergency_contact")
             .populate({
                 path: "last_video",
                 select: "title description link thumbnail_link"

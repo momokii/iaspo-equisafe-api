@@ -3,6 +3,7 @@ const statusCode = require('../utils/http-response').httpStatus_keyValue
 const Article = require('../models/article')
 const fileController = require('../controllers/fileController')
 const mongoose = require('mongoose')
+const article = require('../models/article')
 
 // * -------------------------------- routing
 
@@ -18,7 +19,12 @@ exports.getAllArticle = async (req, res, next) => {
         const total_data = await Article.find().countDocuments()
         // * karena pake search -> maka tidak gunakan skip/limit pada proses query dan dilakukan secara manual dengan urutan | query -> filter search -> pagination
         let all_article = await Article.find()
-            .select('title author source pic content')
+            .select('title author source pic content createdAt').lean()
+
+        for (let article of all_article){
+            article.createdAt = article.createdAt.toISOString().split('T')[0]
+        }
+        
         const response = {
             errors: false,
             message: 'Get Article Data',
@@ -81,8 +87,10 @@ exports.getOneArticle = async (req, res, next) => {
             throw_err("Article data not found", statusCode['404_not_found'])
         }
 
-        const article = await Article.findById(id_article)
-            .select('title author source pic content')
+        let article = await Article.findById(id_article)
+            .select('title author source pic content createdAt').lean()
+        article.createdAt = article.createdAt.toISOString().split('T')[0]
+
         if(!article){
             throw_err("Article data not found", statusCode['404_not_found'])
         }
@@ -108,7 +116,8 @@ exports.getOneArticle = async (req, res, next) => {
                     author: random_article.author,
                     source: random_article.source,
                     pic: random_article.pic,
-                    content: random_article.content
+                    content: random_article.content,
+                    createdAt: random_article.createdAt.toISOString().split('T')[0]
                 }
             }
         })

@@ -100,6 +100,8 @@
  *                             type: string
  *                           content:
  *                             type: string
+ *                           createdAt:
+ *                             type: string   
  *
  *       '401':
  *         description: Token not valid / Account doesnt have access
@@ -177,6 +179,8 @@
  *                           type: string
  *                         content:
  *                           type: string
+ *                         createdAt:
+ *                             type: string   
  *                     recomendation_article:
  *                       type: object
  *                       properties:  
@@ -191,7 +195,9 @@
  *                         pic:
  *                           type: string
  *                         content:
- *                           type: string     
+ *                           type: string 
+ *                         createdAt:
+ *                             type: string          
  *
  *       '401':
  *         description: Token not valid / Account doesnt have access
