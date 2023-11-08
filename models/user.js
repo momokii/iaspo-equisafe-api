@@ -36,6 +36,10 @@ const userSchema = new Schema({
             required: true
         }
     },
+    favorites_video: [{
+        type: Schema.Types.ObjectId,
+        ref: 'Video'
+    }],
     token: {
         auth: {
             type: String,

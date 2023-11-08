@@ -58,10 +58,10 @@ exports.check_username = async (req, res, next) => {
 exports.get_info_self = async(req, res, next) => {
     try {
         const user = await User.findById(req.userId)
-            .select("username name role last_video emergency_contact")
+            .select("username name role last_video favorites_video emergency_contact")
             .populate({
-                path: "last_video",
-                select: "title description link thumbnail_link"
+                path: 'last_video favorites_video',
+                select: 'title description link thumbnail_link'
             })
             .lean()
 
@@ -103,9 +103,9 @@ exports.get_info = async (req, res, next) => {
         let user = await User.findOne({
             username: req.params.username
         })
-            .select('username name role last_video emergency_contact')
+            .select('username name role last_video favorites_video emergency_contact')
             .populate({
-                path: 'last_video',
+                path: 'last_video favorites_video',
                 select: 'title description link thumbnail_link'
             })
             .lean()

@@ -24,6 +24,7 @@ exports.getAllVideo = async (req, res, next) => {
         // * karena pake search -> maka tidak gunakan skip/limit pada proses query dan dilakukan secara manual dengan urutan | query -> filter search -> pagination
         let all_video = await Video.find()
             .select('title description link thumbnail_link')
+            .lean()
         const response = {
             errors: false,
             message: 'Get Video Data',
@@ -50,6 +51,19 @@ exports.getAllVideo = async (req, res, next) => {
 
         all_video = all_video.slice(start_data, start_data + per_page)
 
+        // * check video data for user favorite data
+        const user = await User.findById(req.userId)
+        if(!user){
+            throw_err("User not found/ Token not valid", statusCode['401_unauthorized'])
+        }
+        for(let video of all_video){
+            if(user.favorites_video.includes(video._id)){
+                video.is_favorite = true
+            } else {
+                video.is_favorite = false
+            }
+        }
+
         response.data = {
             ...response.data,
             current_page: current_page,
@@ -73,12 +87,22 @@ exports.getAllVideo = async (req, res, next) => {
 exports.getOneVideo = async (req, res, next) => {
     try{
         const id_video = req.params.id_video
-        const video = await Video.findById(id_video)
+        let video = await Video.findById(id_video)
             .select("title description link thumbnail_link")
+            .lean()
         if(!video){
             throw_err("Data Video Not Found", statusCode['404_not_found'])
         }
 
+        const user = await User.findById(req.userId)
+        if(!user){
+            throw_err("User not found/ Token not valid", statusCode['401_unauthorized'])
+        }
+
+        video.is_favorite = false
+        if(user.favorites_video.includes(id_video)){
+            video.is_favorite = true
+        }
 
         res.status(statusCode['200_ok']).json({
             errors: false,

@@ -3,13 +3,15 @@ const jwt = require('jsonwebtoken')
 const statusCode = require('../utils/http-response').httpStatus_keyValue
 const User = require('../models/user')
 
+function throw_err(msg, code) {
+    const err = new Error(msg)
+    err.statusCode = code
+    throw err
+}
+
 module.exports = async (req, res, next) => {
     try {
-        function throw_err(msg, code) {
-            const err = new Error('Token Tidak Valid')
-            err.statusCode = statusCode['401_unauthorized']
-            throw err
-        }
+        
 
         const authHeader = req.get('Authorization')
         if(!authHeader){

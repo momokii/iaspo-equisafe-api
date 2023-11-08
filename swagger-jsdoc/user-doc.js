@@ -116,6 +116,21 @@
  *                           type: string
  *                         no_telp:
  *                           type: string
+ *                     favorites_video:
+ *                       type: array
+ *                       items:
+ *                         type: object
+ *                         properties:
+ *                           _id:
+ *                             type: string
+ *                           title:
+ *                             type: string
+ *                           description:
+ *                             type: string
+ *                           link: 
+ *                             type: string  
+ *                           thumbnail_link:
+ *                             type: string   
  *
  *       '404':
  *         description: User data not found
@@ -206,6 +221,21 @@
  *                           type: string
  *                         no_telp:
  *                           type: string
+ *                     favorites_video:
+ *                       type: array
+ *                       items:
+ *                         type: object
+ *                         properties:
+ *                           _id:
+ *                             type: string
+ *                           title:
+ *                             type: string
+ *                           description:
+ *                             type: string
+ *                           link:
+ *                             type: string
+ *                           thumbnail_link:
+ *                             type: string              
  *
  *
  *       '401':
@@ -246,6 +276,135 @@
  *
  *
  */
+
+
+
+
+
+//*! /username/favorites
+/**
+ * @swagger
+ * /users/favorites:
+ *   post:
+ *     summary: Add new Favorite data to user list
+ *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               id_video:
+ *                 type: string
+ *
+ *     responses:
+ *       '200':
+ *         description: Success Add new Favorite data to user list
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 errors:
+ *                   example: false
+ *                 message:
+ *                   example: Success add new favorite data
+ *
+ *       '401':
+ *         description: Token not valid / Account doesnt have access
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 errors:
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *
+ *       '500':
+ *         description: Internal Server Error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 errors:
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *
+ *
+ */
+
+
+
+
+
+//*! /username/favorites/delete
+/**
+ * @swagger
+ * /users/favorites/delete:
+ *   post:
+ *     summary: Delete favorite data from user list
+ *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               delete_all:
+ *                 type: boolean    
+ *               id_video:
+ *                 type: string
+ *
+ *     responses:
+ *       '200':
+ *         description: Success Delete favorite data
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 errors:
+ *                   example: false
+ *                 message:
+ *                   example: Success delete favrite data from user
+ *
+ *       '401':
+ *         description: Token not valid / Account doesnt have access
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 errors:
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *
+ *       '500':
+ *         description: Internal Server Error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 errors:
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *
+ *
+ */
+
 
 
 

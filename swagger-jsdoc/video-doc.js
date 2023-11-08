@@ -40,7 +40,7 @@
  *                       type: number
  *                     per_page:
  *                       type: number
- *                     articles:
+ *                     videos:
  *                       type: array
  *                       items:
  *                         properties:
@@ -54,6 +54,8 @@
  *                             type: string
  *                           thumbnail_link:
  *                             type: string  
+ *                           is_favorite:
+ *                             type: boolean   
  *
  *       '401':
  *         description: Token not valid / Account doesnt have access
@@ -126,6 +128,8 @@
  *                       type: string
  *                     thumbnail_link:
  *                       type: string 
+ *                     is_favorite:
+ *                       type: boolean        
  *
  *       '404':
  *         description: Video data not found
