@@ -174,6 +174,90 @@
 
 
 
+//*! /videos/manual
+/**
+ * @swagger
+ * /videos/manual:
+ *   post:
+ *     summary: Post new video data with existed/uploaded video file on youtube/gcp - admin exclusive
+ *     tags: [Video]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               from_youtube:
+ *                 type: boolean
+ *                 default: false
+ *               youtube_link:
+ *                 type: string
+ *               description:
+ *                 type: string
+ *               title:
+ *                 type: string
+ *               gcp_filename:
+ *                 type: string      
+ *
+ *     responses:
+ *       '200':
+ *         description: Success add new video data with manual 
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 errors:
+ *                   example: false
+ *                 message:
+ *                   example: Success add new video data with manual input
+ * 
+ *       '400':
+ *         description: Process Post new video error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 errors:
+ *                   example: true
+ *                 message:
+ *                   type: string    
+ *
+ *       '401':
+ *         description: Token not valid / Account doesnt have access
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 errors:
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *
+ *       '500':
+ *         description: Internal Server Error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 errors:
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *
+ *
+ */
+
+
+
+
+
 //*! /videos
 /**
  * @swagger

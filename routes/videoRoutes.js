@@ -11,6 +11,8 @@ router.get('/', is_auth,videoController.getAllVideo)
 
 router.get('/:id_video', is_auth, videoController.getOneVideo)
 
+router.post('/manual', is_auth, is_admin, videoController.post_video_manual)
+
 router.post('/', is_auth, is_admin, process_file ,videoController.post_video)
 
 router.patch('/:id_video/recent', is_auth, videoController.post_recent_video)

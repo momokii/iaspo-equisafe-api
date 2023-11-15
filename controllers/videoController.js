@@ -122,6 +122,95 @@ exports.getOneVideo = async (req, res, next) => {
 
 
 
+exports.post_video_manual = async (req, res, next) => {
+    try {
+        const title = (req.body.title || "").trim()
+        const description = (req.body.description || "").trim()
+        const from_youtube = req.body.from_youtube || false
+        const youtube_link = (req.body.youtube_link || "").trim()
+        const gcp_filename = (req.body.gcp_filename || "").trim()
+        if(!title || !description){
+            throw_err("Your description/ title is empty, process failed, please check your input again", statusCode['400_bad_request'])
+        }
+        let link
+
+        if(from_youtube === true){
+            if(!youtube_link){
+                throw_err("Youtube link not inputed, process failed, please check your input again", statusCode['400_bad_request'])
+            }
+
+            link = youtube_link
+
+            // * check if the name already exist (video) in database  
+            const check_video = await Video.findOne({
+                link: link
+            })
+            if (check_video){
+                throw_err("Video with same link already exist, please check your input name again", statusCode['400_bad_request'])
+            }            
+
+        } else {
+            if(!gcp_filename){
+                throw_err("GCP filename not inputed, process failed, please check your input again", statusCode['400_bad_request'])
+            }
+
+            // * filename must included extension
+            const video_extension = ['mp4', 'webm', 'ogg', 'mkv', 'mov']
+            const filename = gcp_filename.split('.')
+            if(filename.length < 2){
+                throw_err("Filename must included extension, please check your input again", statusCode['400_bad_request'])
+            }
+            const file_ext = filename[filename.length - 1]
+            if(!video_extension.includes(file_ext)){
+                throw_err("File extension allowed only mp4, webm, ogg, mkv, mov, please check your input name again", statusCode['400_bad_request'])
+            }
+
+            link = "https://storage.googleapis.com/equisafe-prod/videos/" + gcp_filename
+
+            // * check if the name already exist (video) in database
+            const check_video = await Video.findOne({
+                link: link
+            })
+            if (check_video){
+                throw_err("Video with same link already exist, please check your input name again", statusCode['400_bad_request'])
+            }
+
+        }
+
+        // * check  if the name already exist (video) in database
+        const check_name = await Video.findOne({
+            title: title
+        })
+        if(check_name){
+            throw_err("Video with same title already exist, please check your input name again", statusCode['400_bad_request'])
+        }
+
+        const new_video = new Video({
+            title: title,
+            description: description,
+            link: link,
+            thumbnail_link: process.env.DEFAULT_PIC_VIDEO
+        })
+
+        await new_video.save()
+
+        res.status(statusCode['200_ok']).json({
+            errors: false,
+            message: "Success add new video data with manual input"
+        })
+
+    } catch(e) {
+        if(!e.statusCode){
+            e.statusCode = statusCode['500_internal_server_error']
+        }
+        next(e)
+    }
+}
+
+
+
+
+
 exports.post_video = async (req, res, next) => {
     try{
         if(!req.file){
